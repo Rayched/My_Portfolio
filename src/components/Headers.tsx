@@ -1,7 +1,8 @@
 //포트폴리오, Header 컴포넌트
 
-import { useEffect } from "react";
-import { Link, useMatch } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Link, useMatch, useMatches, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.header`
@@ -32,44 +33,95 @@ const Titles = styled.div`
 const NavBar = styled.nav`
     display: flex;
     flex-direction: row;
+    position: relative;
 `;
 
-const URLItem = styled.div<{isMatch: boolean}>`
+const URLItem = styled.div`
     font-weight: bold;
     font-size: 17px;
     padding: 3px 5px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: ce;
     align-items: center;
-    border: 2px solid black;
-    border-radius: 10px;
+    position: relative;
     margin: 0px 3px;
 
-    background-color: ${(props) => props.isMatch ? "rgb(255, 100, 100)" : "inherit"};
+    a {
+        display: block;
+    }
+`;
+
+const URLMatchBar = styled(motion.div)`
+    width: 50px;
+    height: 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: black;
+    position: absolute;
+    bottom: -8px;
+`;
+
+const UtilsBar = styled.div`
+    margin-right: 5px;
+`;
+
+const ThemeBtn = styled.div`
+    width: 80px;
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const ThemeCircle = styled(motion.div)`
+    width: 25px;
+    height: 25px;
+    border: 2px solid black;
+    border-radius: 25px;
+    margin: 0px 3px;
 `;
 
 function Headers(){
-    const Homes = useMatch("/");
-    const Abouts = useMatch("/about");
-    const Projects = useMatch("/project");
+    const URLNames = ["Home", "About", "Project"];
 
-    useEffect(() => console.log(Homes));
+    const isHomes = useMatch("/");
+    const isAbouts = useMatch("/about");
+    const isProjects = useMatch("/project");
+
+    const [isDark, setDark] = useState(false); 
+
     return (
         <Container>
             <Titles>
                 <Link to={"/"}>Hanbyeol_Yu</Link>
             </Titles>
             <NavBar>
-                <URLItem isMatch={Homes !== null}>
+                <URLItem key="HomeURL">
                     <Link to={"/"}>Home</Link>
+                    {isHomes ? <URLMatchBar layoutId="MatchBar"/> : null}
                 </URLItem>
-                <URLItem isMatch={Abouts !== null}>
+                <URLItem key="AboutURL">
                     <Link to={"/about"}>About</Link>
+                    {isAbouts ? <URLMatchBar layoutId="MatchBar"/> : null}
                 </URLItem>
-                <URLItem isMatch={Projects !== null}>
+                <URLItem key="ProjectURL">
                     <Link to={"/project"}>Project</Link>
+                    {isProjects ? <URLMatchBar layoutId="MatchBar"/> : null}
                 </URLItem>
             </NavBar>
+            <UtilsBar>
+                <ThemeBtn onClick={() => setDark((prev) => !prev)}>
+                    <div key="Dark">
+                        {isDark ? <ThemeCircle layoutId="circle" /> : null}
+                    </div>
+                    <div key="Light">
+                        {isDark ? null : <ThemeCircle layoutId="circle" />}
+                    </div>
+                </ThemeBtn>
+            </UtilsBar>
         </Container>
     );
 };
