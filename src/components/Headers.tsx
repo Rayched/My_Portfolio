@@ -2,17 +2,19 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link, useMatch, useMatches, useParams } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
+import ThemeBtn from "./ThemeBtn";
+import ThemeBtnVerM from "./ThemeBtnVerM";
 
 const Container = styled.header`
     width: 100%;
-    height: 13%;
+    height: 10%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(247, 243, 243);
+    background-color:rgb(247, 241, 227);
 
     a {
         text-decoration: none;
@@ -33,6 +35,8 @@ const Titles = styled.div`
 const NavBar = styled.nav`
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
     position: relative;
 `;
 
@@ -42,7 +46,7 @@ const URLItem = styled.div`
     padding: 3px 5px;
     display: flex;
     flex-direction: column;
-    justify-content: ce;
+    justify-content: center;
     align-items: center;
     position: relative;
     margin: 0px 3px;
@@ -63,35 +67,22 @@ const URLMatchBar = styled(motion.div)`
 `;
 
 const UtilsBar = styled.div`
-    margin-right: 5px;
-`;
-
-const ThemeBtn = styled.div`
-    width: 80px;
-    height: 30px;
-    border: 2px solid black;
-    border-radius: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
-
-const ThemeCircle = styled(motion.div)`
-    width: 25px;
-    height: 25px;
-    border: 2px solid black;
-    border-radius: 25px;
-    margin: 0px 3px;
+    margin-right: 3px;
+    padding: 0px 3px;
 `;
 
 function Headers(){
-    const URLNames = ["Home", "About", "Project"];
-
     const isHomes = useMatch("/");
     const isAbouts = useMatch("/about");
     const isProjects = useMatch("/project");
 
-    const [isDark, setDark] = useState(false); 
+    const [InnerWidth, setInnerWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const resizeListener = () => setInnerWidth(window.innerWidth);
+
+        window.addEventListener("resize", resizeListener);
+    })
 
     return (
         <Container>
@@ -113,14 +104,8 @@ function Headers(){
                 </URLItem>
             </NavBar>
             <UtilsBar>
-                <ThemeBtn onClick={() => setDark((prev) => !prev)}>
-                    <div key="Dark">
-                        {isDark ? <ThemeCircle layoutId="circle" /> : null}
-                    </div>
-                    <div key="Light">
-                        {isDark ? null : <ThemeCircle layoutId="circle" />}
-                    </div>
-                </ThemeBtn>
+                {InnerWidth <= 610 ? <ThemeBtnVerM /> : null}
+                {InnerWidth >= 609 ? <ThemeBtn /> : null}
             </UtilsBar>
         </Container>
     );
